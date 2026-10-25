@@ -1,0 +1,51 @@
+name: Godot tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: godot-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  headless:
+    name: Import, gameplay tests and smoke tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      GODOT_VERSION: 4.7.2
+      GODOT_BIN: ${{ github.workspace }}/.tools/godot
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install pinned Godot release
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p .tools
+          cd .tools
+          base="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable"
+          archive="Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip"
+          curl --fail --location --retry 3 "$base/$archive" --output "$archive"
+          curl --fail --location --retry 3 "$base/SHA512-SUMS.txt" --output SHA512-SUMS.txt
+          grep " $archive\$" SHA512-SUMS.txt | sha512sum --check --strict
+          unzip -q "$archive"
+          mv "Godot_v${GODOT_VERSION}-stable_linux.x86_64" godot
+          chmod +x godot
+          ./godot --version
+      - name: Validate project
+        run: python3 tools/test.py
+      - name: Upload validation logs
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: godot-test-logs
+          path: artifacts/*.log
+          retention-days: 7

@@ -1,0 +1,45 @@
+# Godot 4 caches; keep .gd.uid files and source assets tracked.
+/.godot/
+/.tools/
+/export_credentials.cfg
+
+# Raw recordings and test output. Curated media lives in docs/media/.
+/artifacts/*
+!/artifacts/.gdignore
+
+# Exported builds and local engine/editor data.
+/build/
+/builds/
+/dist/
+/exports/
+/export_templates/
+/feature_profiles/
+/script_templates/
+/text_editor_themes/
+*.pck
+*.app/
+*.dmg
+*.zip
+*.exe
+
+# Secrets and local environments (never required to play).
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Editors, Python tooling and OS metadata.
+/.idea/
+/.vscode/
+__pycache__/
+*.py[cod]
+.venv/
+.DS_Store
+._*
+Thumbs.db
+Desktop.ini
+*.swp
+*.swo
+*.tmp
+*.log

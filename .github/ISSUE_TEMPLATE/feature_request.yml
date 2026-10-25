@@ -1,0 +1,17 @@
+name: Sugerir melhoria
+description: Uma ideia para deixar a feira mais divertida ou acessível.
+title: "[Ideia]: "
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: O que você gostaria de melhorar?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Como a melhoria funcionaria?
+      description: Considere o escopo pequeno, offline e procedural do projeto.
+    validations:
+      required: true
